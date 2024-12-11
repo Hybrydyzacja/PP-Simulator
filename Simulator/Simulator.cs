@@ -23,9 +23,12 @@ public class Simulator
         //        Description = "Dogs"
         //    };
         //    Console.WriteLine(dogs.Info);
-
         //}
 
+
+
+
+        // 3. Logika w setterach
         {
             Lab3a();
         }
@@ -61,6 +64,34 @@ public class Simulator
 
             a = new() { Description = "Mice           are great", Size = 40 };
             Console.WriteLine(a.Info);
+        }
+
+
+
+        // 4. Kierunki
+        {
+            Lab3b();
+        }
+
+            static void Lab3b()
+        {
+            Creature c = new("Shrek", 7);
+            c.SayHi();
+
+            Console.WriteLine("\n* Up");
+            c.Go(Direction.Up);
+
+            Console.WriteLine("\n* Right, Left, Left, Down");
+            Direction[] directions = {
+        Direction.Right, Direction.Left, Direction.Left, Direction.Down
+    };
+            c.Go(directions);
+
+            Console.WriteLine("\n* LRL");
+            c.Go("LRL");
+
+            Console.WriteLine("\n* xxxdR lyyLTyu");
+            c.Go("xxxdR lyyLTyu");
         }
     }
 }

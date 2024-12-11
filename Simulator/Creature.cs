@@ -9,10 +9,11 @@ public class Creature
         get => name;
         init
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                value = name;
-            }
+            //if (string.IsNullOrWhiteSpace(value))    // czy przy null ma byc ### czy Unknown?
+            //{
+            //    value = name;
+            //}
+
             value = value.Trim();
             if (value.Length > 25)
             {
@@ -62,6 +63,27 @@ public class Creature
             level++;
         }
     }
+
+    public void Go(Direction direction)
+    {
+        Console.WriteLine($"{Name} goes {direction.ToString().ToLower()}.");
+    }
+
+    public void Go(Direction[] directions)
+    {
+        foreach (var direction in directions)
+        {
+            Go(direction);
+        }
+    }
+
+    public void Go(string directions)
+    {
+        Direction[] directionsParsed = DirectionParser.Parse(directions);
+        Go(directionsParsed);
+    }
+
+
 
     public void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}.");
     public string Info => $"{Name} [{Level}]";
