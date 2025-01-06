@@ -2,7 +2,7 @@
 
 namespace Simulator;
 
-public class Simulator
+public class Program
 {
     static void Main(string[] args)
     {
