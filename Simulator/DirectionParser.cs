@@ -3,7 +3,7 @@ namespace Simulator;
 
 public class DirectionParser
 {
-    public static Direction[] Parse(string directions)
+    public static List<Direction> Parse(string directions)
     {
         //if (string.IsNullOrWhiteSpace(directions))    //czy potrzebne takie zabezpieczenie?
         //{
@@ -30,6 +30,6 @@ public class DirectionParser
             }
         }
 
-        return directionsParsed.ToArray();
+        return directionsParsed;
     }
 }

@@ -5,13 +5,24 @@
 /// </summary>
 public abstract class Map
 {
-    /// <summary>
-    /// Check if give point belongs to the map.
-    /// </summary>
-    /// <param name="p">Point to check.</param>
-    /// <returns></returns>
-    public abstract bool Exist(Point p);
+    private readonly Rectangle bounds;
+    public int SizeX { get; }
+    public int SizeY { get; }
 
+    protected Map(int sizeX, int sizeY)
+    {
+        if (sizeX < 5) throw new ArgumentOutOfRangeException(nameof(sizeX), "Za mały wymiar krawędzi X");
+        if (sizeY < 5) throw new ArgumentOutOfRangeException(nameof(sizeY), "Za mały wymiar krawędzi Y");
+
+        SizeX = sizeX;
+        SizeY = sizeY;
+        bounds = new Rectangle(0, 0, SizeX - 1, SizeY - 1);
+    }
+
+    public bool Exist(Point p)
+    {
+        return bounds.Contains(p);
+    }
     /// <summary>
     /// Next position to the point in a given direction.
     /// </summary>

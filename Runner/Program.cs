@@ -66,7 +66,7 @@ public class Program
         {
             try
             {
-                var map = new SmallSquareMap(10);
+                var map = new SmallSquareMap(10,10);
                 Console.WriteLine($"Map size: {map.Size}");
 
                 var point1 = new Point(5, 5);

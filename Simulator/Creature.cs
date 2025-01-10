@@ -1,4 +1,5 @@
 ﻿
+
 namespace Simulator;
 
 public abstract class Creature
@@ -56,10 +57,14 @@ public abstract class Creature
 
     public string[] Go(string directions)
     {
-        Direction[] directionsParsed = DirectionParser.Parse(directions);
+        List<Direction> directionsParsed = DirectionParser.Parse(directions);
         return Go(directionsParsed);
     }
 
+    public string[] Go(List<Direction> directionsParsed)
+    {
+        throw new NotImplementedException();
+    }
 
     public abstract int Power { get; }
     public abstract string Greeting();
