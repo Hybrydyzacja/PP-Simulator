@@ -5,6 +5,13 @@
 /// </summary>
 public abstract class Map
 {
+    public abstract void Add(Creature c, Point p);
+    public abstract void Remove(Creature c, Point p);
+    public abstract void Move(Creature c, Point start, Point destination);
+    public abstract List<Creature>? At(Point p);
+    public abstract List<Creature>? At(int x, int y);
+
+
     private readonly Rectangle bounds;
     public int SizeX { get; }
     public int SizeY { get; }

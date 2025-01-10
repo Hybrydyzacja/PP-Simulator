@@ -1,9 +1,12 @@
 ﻿
-
+using Simulator.Maps;
 namespace Simulator;
 
 public abstract class Creature
 {
+    public Map? Map { get; private set; }
+    public Point Position { get; private set; }
+
     private string name = "Unknown";
     public string Name
     {
@@ -42,17 +45,24 @@ public abstract class Creature
         }
     }
 
-    public string Go(Direction direction) => $"{direction.ToString().ToLower()}";
-
-    public string[] Go(Direction[] directions)
+    public void InitMapAndPosition(Map map, Point p)
     {
-        string[] results = new string[directions.Length];
+        Map = map;
+        Position = p;
+    }
 
-        for (int i = 0; i < directions.Length; i++)
+
+
+    public string Go(Direction direction)
+    {
+        try
         {
-            results[i] = Go(directions[i]);
+            Map.Move(this, Position, Map.Next(Position, direction));
+            Position = Map.Next(Position, direction);
         }
-        return results;
+        catch (NullReferenceException)
+        { Console.WriteLine($"Creature ({this.name}) out of map"); }
+        return $"{direction.ToString().ToLower()}";
     }
 
     public string[] Go(string directions)
