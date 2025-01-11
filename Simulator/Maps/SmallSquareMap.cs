@@ -7,8 +7,13 @@ public class SmallSquareMap : SmallMap
     public readonly int Size;
     public SmallSquareMap(int sizeX, int sizeY) : base(sizeX, sizeY)
     {
+        Size = Math.Min(sizeX, sizeY);
     }
 
+    public SmallSquareMap(int size) : this(size, size)
+    {
+        Size = size;
+    }
     public override Point Next(Point p, Direction d)
     {
         Point nextPoint = p.Next(d);

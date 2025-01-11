@@ -44,8 +44,10 @@ public class Simulation
     /// <summary>
     /// Lowercase name of direction which will be used in current turn.
     /// </summary>
-    public string CurrentMoveName { 
-        get => DirectionParser.Parse(Moves[index % Moves.Length].ToString())[0].ToString().ToLower(); }
+    public string CurrentMoveName
+    {
+        get => DirectionParser.Parse(Moves[index % Moves.Length].ToString())[0].ToString().ToLower();
+    }
 
     /// <summary>
     /// Simulation constructor.
@@ -71,20 +73,21 @@ public class Simulation
         Creatures = creatures;
         Positions = positions;
         Moves = moves ?? throw new ArgumentNullException(nameof(moves));
-        }
+    }
 
     /// <summary>
     /// Makes one move of current creature in current direction.
     /// Throw error if simulation is finished.
     /// </summary>
-    public void Turn() {
+    public void Turn()
+    {
         if (Finished)
         {
             throw new InvalidOperationException("Koniec symulacji");
         }
 
 
-        char moveChar= Moves[index % Moves.Length];
+        char moveChar = Moves[index % Moves.Length];
 
         var parsedDirections = DirectionParser.Parse(moveChar.ToString());
 
@@ -93,7 +96,22 @@ public class Simulation
             throw new InvalidOperationException($"Nieprawidłowy znak '{moveChar}'. Możliwe kierunki: 'U', 'D', 'L', 'R'.");
         }
 
-        _ = parsedDirections[0];
+        Creature currentCreature = CurrentCreature;
+        Point currentPosition = Positions[index % Positions.Count];
+
+        Direction moveDirection = parsedDirections[0];
+        Point nextPosition = Map.Next(currentPosition, moveDirection);
+
+        if (Map.Exist(nextPosition))
+        {
+            // Zaktualizuj mapę
+            Map.Remove(currentCreature, currentPosition);
+            Map.Add(currentCreature, nextPosition);
+
+            // Zaktualizuj pozycję stworzenia
+            Positions[index % Positions.Count] = nextPosition;
+        }
+
         index++;
 
         if (index >= Moves.Length)
