@@ -11,12 +11,12 @@ public class Program
         Console.OutputEncoding = Encoding.UTF8;
 
         SmallSquareMap map = new(5);
-        List<Creature> creatures = [new Orc("Gorbag"), new Elf("Elandor")];
+        List<IMappable> mappables = new() { new Orc("Gorbag"), new Elf("Elandor") };
         List<Point> points = [new(2, 2), new(3, 1)];
         string moves = "dlrludl";
 
-        Simulation simulation = new(map, creatures, points, moves);
-        MapVisualizer mapVisualizer = new MapVisualizer(simulation.Map, simulation.Creatures, simulation.Positions);
+        Simulation simulation = new(map, mappables, points, moves);
+        MapVisualizer mapVisualizer = new MapVisualizer(simulation.Map, simulation.Mappables, simulation.Positions);
 
 
         Console.WriteLine("Starting positions:");
@@ -28,12 +28,15 @@ public class Program
             Console.WriteLine("Naciśnij dowolny klawisz, aby wykonać kolejny ruch...");
             Console.ReadKey(true);
 
-            var currentCreature = simulation.CurrentCreature;
-            var currentPosition = simulation.Positions[simulation.Creatures.IndexOf(currentCreature)];
+            var currentMappable = simulation.CurrentMappable;
+            var currentPosition = simulation.Positions[simulation.Mappables.IndexOf(currentMappable)];
             var moveChar = simulation.CurrentMoveName;
             var direction = DirectionParser.Parse(moveChar.ToUpper())[0];
             var nextPosition = simulation.Map.Next(currentPosition, direction);
-            mapVisualizer.LogMove(currentCreature, currentPosition, nextPosition, direction);
+            if (currentMappable is Creature creature)
+            {
+                mapVisualizer.LogMove(creature, currentPosition, nextPosition, direction);
+            }
 
             simulation.Turn();
             

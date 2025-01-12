@@ -2,7 +2,7 @@
 using Simulator.Maps;
 namespace Simulator;
 
-public abstract class Creature
+public abstract class Creature : IMappable
 {
     public Map? Map { get; private set; }
     public Point Position { get; private set; }
@@ -57,6 +57,11 @@ public abstract class Creature
     {
         try
         {
+            if (Map == null)
+            {
+                throw new InvalidOperationException("Creature is not assigned to any map.");
+            }
+
             Map.Move(this, Position, Map.Next(Position, direction));
             Position = Map.Next(Position, direction);
         }
@@ -73,7 +78,14 @@ public abstract class Creature
 
     public string[] Go(List<Direction> directionsParsed)
     {
-        throw new NotImplementedException();
+        List<string> results = new();
+
+        foreach (Direction direction in directionsParsed)
+        {
+            results.Add(Go(direction)); // Wywołanie pojedynczego ruchu
+        }
+
+        return results.ToArray();
     }
 
     public abstract int Power { get; }

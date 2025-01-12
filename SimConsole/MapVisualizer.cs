@@ -12,13 +12,13 @@ namespace SimConsole;
 public class MapVisualizer
 {
     private readonly Map _map;
-    private readonly List<Creature> _creatures;
+    private readonly List<IMappable> _mappables;
     private readonly List<Point> _positions;
 
-    public MapVisualizer(Map map, List<Creature> creatures, List<Point> positions)
+    public MapVisualizer(Map map, List<IMappable> mappables, List<Point> positions)
     {
         _map = map;
-        _creatures = creatures;
+        _mappables = mappables;
         _positions = positions;
     }
 
@@ -28,15 +28,15 @@ public class MapVisualizer
         int sizeX = _map.SizeX;
         int sizeY = _map.SizeY;
 
-        var creaturePositions = new Dictionary<Point, List<Creature>>();
-        for (int i = 0; i < _creatures.Count; i++)
+        var mappablePositions = new Dictionary<Point, List<IMappable>>();
+        for (int i = 0; i < _mappables.Count; i++)
         {
             Point position = _positions[i];
-            if (!creaturePositions.ContainsKey(position))
+            if (!mappablePositions.ContainsKey(position))
             {
-                creaturePositions[position] = new List<Creature>();
+                mappablePositions[position] = new List<IMappable>();
             }
-            creaturePositions[position].Add(_creatures[i]);
+            mappablePositions[position].Add(_mappables[i]);
         }
 
         Console.Write(Box.TopLeft);
@@ -56,14 +56,14 @@ public class MapVisualizer
                     Console.Write(Box.Vertical);
 
                 Point point = new Point(x, y);
-                if (creaturePositions.ContainsKey(point))
+                if (mappablePositions.ContainsKey(point))
                 {
-                    var creaturesAtPoint = creaturePositions[point];
-                    if (creaturesAtPoint.Count > 1)
+                    var mappableAtPoint = mappablePositions[point];
+                    if (mappableAtPoint.Count > 1)
                         Console.Write(" X ");
-                    else if (creaturesAtPoint[0] is Orc)
+                    else if (mappableAtPoint[0] is Orc)
                         Console.Write(" O ");
-                    else if (creaturesAtPoint[0] is Elf)
+                    else if (mappableAtPoint[0] is Elf)
                         Console.Write(" E ");
                 }
                 else
@@ -98,12 +98,15 @@ public class MapVisualizer
         Console.WriteLine(Box.BottomRight);
     }
 
-    public void LogMove(Creature creature, Point start, Point destination, Direction direction)
+    public void LogMove(IMappable mappable, Point start, Point destination, Direction direction)
     {
         if (start.X != destination.X || start.Y != destination.Y)
+        {
+            if (mappable is Creature creature)
 
             {
-                Console.WriteLine($"{creature.GetType().Name.ToUpper()}: {creature.Name} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()} ({destination.X}, {destination.Y}):");
+                Console.WriteLine($"{mappable.GetType().Name.ToUpper()}: {mappable.Name} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()} ({destination.X}, {destination.Y}):");
+            }
         }
     }
 }

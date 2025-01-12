@@ -13,7 +13,7 @@ public class Simulation
     /// <summary>
     /// Creatures moving on the map.
     /// </summary>
-    public List<Creature> Creatures { get; }
+    public List<IMappable> Mappables { get; }
 
     /// <summary>
     /// Starting positions of creatures.
@@ -37,9 +37,9 @@ public class Simulation
     /// <summary>
     /// Creature which will be moving current turn.
     /// </summary>
-    public Creature CurrentCreature
+    public IMappable CurrentMappable
     {
-        get => Creatures[index % Creatures.Count];
+        get => Mappables[index % Mappables.Count];
     }
     /// <summary>
     /// Lowercase name of direction which will be used in current turn.
@@ -56,21 +56,21 @@ public class Simulation
     /// if number of creatures differs from 
     /// number of starting positions.
     /// </summary>
-    public Simulation(Map map, List<Creature> creatures,
+    public Simulation(Map map, List<IMappable> mappables,
         List<Point> positions, string moves)
     {
-        if (creatures == null || creatures.Count == 0)
+        if (mappables == null || mappables.Count == 0)
         {
-            throw new ArgumentException("Lista stworów nie może być pusta", nameof(creatures));
+            throw new ArgumentException("Lista stworów nie może być pusta", nameof(mappables));
         }
 
-        if (creatures.Count != positions.Count)
+        if (mappables.Count != positions.Count)
         {
             throw new ArgumentException("Liczba stworów musi odpowiadac liczbie pozycji");
         }
 
         Map = map ?? throw new ArgumentNullException(nameof(map));
-        Creatures = creatures;
+        Mappables = mappables;
         Positions = positions;
         Moves = moves ?? throw new ArgumentNullException(nameof(moves));
     }
@@ -96,7 +96,7 @@ public class Simulation
             throw new InvalidOperationException($"Nieprawidłowy znak '{moveChar}'. Możliwe kierunki: 'U', 'D', 'L', 'R'.");
         }
 
-        Creature currentCreature = CurrentCreature;
+        IMappable currentMappable =  CurrentMappable;
         Point currentPosition = Positions[index % Positions.Count];
 
         Direction moveDirection = parsedDirections[0];
@@ -105,8 +105,8 @@ public class Simulation
         if (Map.Exist(nextPosition))
         {
             // Zaktualizuj mapę
-            Map.Remove(currentCreature, currentPosition);
-            Map.Add(currentCreature, nextPosition);
+            Map.Remove(currentMappable, currentPosition);
+            Map.Add(currentMappable, nextPosition);
 
             // Zaktualizuj pozycję stworzenia
             Positions[index % Positions.Count] = nextPosition;
