@@ -41,20 +41,20 @@ public class Program
             Console.WriteLine("Naciśnij dowolny klawisz, aby wykonać kolejny ruch...");
             Console.ReadKey(true);
 
-            //var currentMappable = simulation.CurrentMappable;
-            //var currentPosition = simulation.Positions[simulation.Mappables.IndexOf(currentMappable)];
-            //var moveChar = simulation.CurrentMoveName;
-            //var direction = DirectionParser.Parse(moveChar.ToUpper())[0];
-            //var nextPosition = simulation.Map.Next(currentPosition, direction);
+            var currentMappable = simulation.CurrentMappable;
+            var currentPosition = simulation.Positions[simulation.Mappables.IndexOf(currentMappable)];
+            var moveChar = simulation.CurrentMoveName;
+            var direction = DirectionParser.Parse(moveChar.ToUpper())[0];
+            var destination = simulation.Map.Next(currentPosition, direction);
 
-            //if (currentMappable is Creature creature)
-            //{
-            //    mapVisualizer.LogMove(creature, currentPosition, nextPosition, direction);
-            //}
-            //if (currentMappable is Animals animal)
-            //{
-            //    mapVisualizer.LogMove(animal, currentPosition, nextPosition, direction);
-            //}
+            if (currentMappable is Creature creature)
+            {
+                mapVisualizer.LogMove(creature, currentPosition, destination, direction);
+            }
+            if (currentMappable is Animals animal)
+            {
+                mapVisualizer.LogMove(animal, currentPosition, destination, direction);
+            }
 
             simulation.Turn();
             

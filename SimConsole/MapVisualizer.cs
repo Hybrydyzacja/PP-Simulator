@@ -85,11 +85,11 @@ public class MapVisualizer
             if (mappable is Creature creature)
 
             {
-                Console.WriteLine($"{mappable.GetType().Name.ToUpper()}: {creature.Name} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()} ({destination.X}, {destination.Y}):");
+                Console.WriteLine($"{mappable.GetType().Name.ToUpper()}: {creature.Name} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()}:");
             }
             else if (mappable is Animals animal)
             {
-                Console.WriteLine($"{mappable.GetType().Name.ToUpper()}: {animal.Description} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()} ({destination.X}, {destination.Y}):");
+                Console.WriteLine($"{mappable.GetType().Name.ToUpper()}: {animal.Description} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()}:");
 
             }
 

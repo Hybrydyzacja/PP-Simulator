@@ -11,5 +11,5 @@ public interface IMappable
     void Go(Direction direction);
     void InitMapAndPosition(Map map, Point p);
     char Symbol { get; }
-
+    Point Position { get; set; }
 }

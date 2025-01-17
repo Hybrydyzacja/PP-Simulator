@@ -5,7 +5,7 @@ namespace Simulator;
 public class Animals : IMappable
 {
     public Map? Map { get; private set; }
-    public Point Position { get; private set; }
+    public Point Position { get; set; }
 
     private string description = "Unknown";
     public required string Description
