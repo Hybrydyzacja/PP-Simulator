@@ -73,6 +73,11 @@ public class Simulation
         Mappables = mappables;
         Positions = positions;
         Moves = moves ?? throw new ArgumentNullException(nameof(moves));
+
+        for (int i = 0; i < Mappables.Count; i++)
+        {
+            mappables[i].InitMapAndPosition(map, positions[i]);
+        }
     }
 
     /// <summary>
@@ -89,29 +94,18 @@ public class Simulation
 
         char moveChar = Moves[index % Moves.Length];
 
-        var parsedDirections = DirectionParser.Parse(moveChar.ToString());
-
-        if (parsedDirections.Count == 0)
+        Direction direction;
+        try
         {
-            throw new InvalidOperationException($"Nieprawidłowy znak '{moveChar}'. Możliwe kierunki: 'U', 'D', 'L', 'R'.");
+            direction = DirectionParser.Parse(moveChar.ToString())[0];
+        }
+        catch (Exception)
+        {
+            throw new InvalidOperationException($"Invalid move character: '{moveChar}'. Valid moves: 'U', 'D', 'L', 'R'.");
         }
 
-        IMappable currentMappable =  CurrentMappable;
-        Point currentPosition = Positions[index % Positions.Count];
 
-        Direction moveDirection = parsedDirections[0];
-        Point nextPosition = Map.Next(currentPosition, moveDirection);
-
-        if (Map.Exist(nextPosition))
-        {
-            // Zaktualizuj mapę
-            Map.Remove(currentMappable, currentPosition);
-            Map.Add(currentMappable, nextPosition);
-
-            // Zaktualizuj pozycję stworzenia
-            Positions[index % Positions.Count] = nextPosition;
-        }
-
+        CurrentMappable.Go(direction);
         index++;
 
         if (index >= Moves.Length)

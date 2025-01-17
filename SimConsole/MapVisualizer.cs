@@ -15,87 +15,67 @@ public class MapVisualizer
     private readonly List<IMappable> _mappables;
     private readonly List<Point> _positions;
 
-    public MapVisualizer(Map map, List<IMappable> mappables, List<Point> positions)
+    public MapVisualizer(Map map)
     {
         _map = map;
-        _mappables = mappables;
-        _positions = positions;
+        //_mappables = mappables;
+        //_positions = positions;
     }
 
     public void Draw()
     {
 
-        int sizeX = _map.SizeX;
-        int sizeY = _map.SizeY;
-
-        var mappablePositions = new Dictionary<Point, List<IMappable>>();
-        for (int i = 0; i < _mappables.Count; i++)
-        {
-            Point position = _positions[i];
-            if (!mappablePositions.ContainsKey(position))
-            {
-                mappablePositions[position] = new List<IMappable>();
-            }
-            mappablePositions[position].Add(_mappables[i]);
-        }
-
         Console.Write(Box.TopLeft);
-        for (int x = 0; x < sizeX; x++)
+        for (int x = 0; x < _map.SizeX - 1; x++)
         {
-            Console.Write(new string(Box.Horizontal, 3));
-            if (x < sizeX - 1)
-                Console.Write(Box.TopMid);
+            Console.Write($"{Box.Horizontal}{Box.TopMid}");
         }
-        Console.WriteLine(Box.TopRight);
+        Console.WriteLine($"{Box.Horizontal}{Box.TopRight}");
 
-        for (int y = 0; y < sizeY; y++)
+        for (int y = _map.SizeY - 1; y >= 0; y--)
         {
-            for (int x = 0; x < sizeX; x++)
+            Console.Write(Box.Vertical);
+            for (int x = 0; x < _map.SizeX; x++)
             {
-                if (x == 0)
-                    Console.Write(Box.Vertical);
+                var creatures = _map.At(x, y);
 
-                Point point = new Point(x, y);
-                if (mappablePositions.ContainsKey(point))
+                if (creatures != null && creatures.Count > 1)
                 {
-                    var mappableAtPoint = mappablePositions[point];
-                    if (mappableAtPoint.Count > 1)
-                        Console.Write(" X ");
-                    else if (mappableAtPoint[0] is Orc)
-                        Console.Write(" O ");
-                    else if (mappableAtPoint[0] is Elf)
-                        Console.Write(" E ");
+                    Console.Write("X");
+                }
+                else if (creatures?.Count == 1)
+                {
+                    var creature = creatures.First();
+                    Console.Write(creature.Symbol);
                 }
                 else
                 {
-                    Console.Write("   ");
+                    Console.Write(" ");
                 }
 
                 Console.Write(Box.Vertical);
             }
             Console.WriteLine();
 
-            if (y < sizeY - 1)
+            if (y > 0)
             {
                 Console.Write(Box.MidLeft);
-                for (int x = 0; x < sizeX; x++)
+                for (int x = 0; x < _map.SizeX - 1; x++)
                 {
-                    Console.Write(new string(Box.Horizontal, 3));
-                    if (x < sizeX - 1)
-                        Console.Write(Box.Cross);
+                    Console.Write($"{Box.Horizontal}{Box.Cross}");
                 }
-                Console.WriteLine(Box.MidRight);
+                Console.WriteLine($"{Box.Horizontal}{Box.MidRight}");
             }
         }
 
         Console.Write(Box.BottomLeft);
-        for (int x = 0; x < sizeX; x++)
+        for (int x = 0; x < _map.SizeX - 1; x++)
         {
-            Console.Write(new string(Box.Horizontal, 3));
-            if (x < sizeX - 1)
-                Console.Write(Box.BottomMid);
+            Console.Write($"{Box.Horizontal}{Box.BottomMid}");
         }
-        Console.WriteLine(Box.BottomRight);
+        Console.WriteLine($"{Box.Horizontal}{Box.BottomRight}");
+
+        Console.WriteLine();
     }
 
     public void LogMove(IMappable mappable, Point start, Point destination, Direction direction)
@@ -105,8 +85,14 @@ public class MapVisualizer
             if (mappable is Creature creature)
 
             {
-                Console.WriteLine($"{mappable.GetType().Name.ToUpper()}: {mappable.Name} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()} ({destination.X}, {destination.Y}):");
+                Console.WriteLine($"{mappable.GetType().Name.ToUpper()}: {creature.Name} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()} ({destination.X}, {destination.Y}):");
             }
+            else if (mappable is Animals animal)
+            {
+                Console.WriteLine($"{mappable.GetType().Name.ToUpper()}: {animal.Description} ({start.X}, {start.Y}) moves {direction.ToString().ToLower()} ({destination.X}, {destination.Y}):");
+
+            }
+
         }
     }
 }

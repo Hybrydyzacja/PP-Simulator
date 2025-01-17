@@ -34,7 +34,7 @@ public abstract class SmallMap : Map
             throw new ArgumentOutOfRangeException(nameof(p), "Pozycja jest poza mapą");
         }
         _fields[p.X, p.Y].Add(mappable);
-        mappable.InitMapAndPosition(this, p);
+        //mappable.InitMapAndPosition(this, p);
     }
     public override List<IMappable>? At(int x, int y) => _fields[x, y];
     public override List<IMappable>? At(Point p) => _fields[p.X, p.Y];
@@ -56,6 +56,6 @@ public abstract class SmallMap : Map
             throw new ArgumentOutOfRangeException(nameof(p), "Pozycja jest poza mapą");
         }
         _fields[p.X, p.Y].Remove(mappable);
-        mappable.InitMapAndPosition(this, default);
+        //mappable.InitMapAndPosition(this, default);
     }
 }

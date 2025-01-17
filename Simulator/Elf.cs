@@ -1,7 +1,8 @@
 ﻿
+using Simulator.Maps;
 namespace Simulator;
 
-public class Elf : Creature
+public class Elf : Creature, IMappable
 {
     private int agility = 1;
     private int counter = 0;
@@ -26,6 +27,8 @@ public class Elf : Creature
     public Elf()
     { 
     }
+    public override char Symbol => 'E';
+
 
     public Elf(string name, int level = 1, int agility = 1) : base(name, level)
     {

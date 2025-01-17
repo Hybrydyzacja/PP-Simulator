@@ -26,6 +26,8 @@ public class Orc : Creature
     public Orc()
     {
     }
+    public override char Symbol => 'O';
+
 
     public Orc(string name, int level = 1, int rage = 1) : base(name, level)
     {

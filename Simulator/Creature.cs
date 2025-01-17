@@ -49,53 +49,29 @@ public abstract class Creature : IMappable
     {
         Map = map;
         Position = p;
+        Map.Add(this, p);
     }
 
 
 
-    public string Go(Direction direction)
+    public void Go(Direction direction)
     {
-        try
+        if (Map == null)
         {
-            if (Map == null)
-            {
-                throw new InvalidOperationException("Creature is not assigned to any map.");
-            }
-
-            Map.Move(this, Position, Map.Next(Position, direction));
-            Position = Map.Next(Position, direction);
-        }
-        catch (NullReferenceException)
-        { Console.WriteLine($"Creature ({this.name}) out of map"); }
-        return $"{direction.ToString().ToLower()}";
-    }
-
-    public string[] Go(string directions)
-    {
-        List<Direction> directionsParsed = DirectionParser.Parse(directions);
-        return Go(directionsParsed);
-    }
-
-    public string[] Go(List<Direction> directionsParsed)
-    {
-        List<string> results = new();
-
-        foreach (Direction direction in directionsParsed)
-        {
-            results.Add(Go(direction)); // Wywołanie pojedynczego ruchu
+            throw new InvalidOperationException("Creature is not assigned to any map.");
         }
 
-        return results.ToArray();
+        Map.Move(this, Position, Map.Next(Position, direction));
+        Position = Map.Next(Position, direction);
     }
+    public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
+    
+
 
     public abstract int Power { get; }
     public abstract string Greeting();
     public abstract string Info { get; }
-
-    public override string ToString()
-    {
-        return $"{GetType().Name.ToUpper()}: {Info}";
-    }
+    public virtual char Symbol => 'C';
 
 
 }
