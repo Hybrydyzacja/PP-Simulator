@@ -23,35 +23,61 @@ public class SimulationHistory
         Run();
     }
 
+
     private void Run()
     {
-        for (int i = 0; i < _simulation.Moves.Length; i++)
+        // Zapisz początkowy stan mapy jako turę 0
+        var initialSymbols = new Dictionary<Point, char>();
+        foreach (var mappable in _simulation.Mappables)
         {
-            
-            var symbols = new Dictionary<Point, char>();
+            if (initialSymbols.ContainsKey(mappable.Position))
+            {
+                initialSymbols[mappable.Position] = 'X'; // Konflikt pozycji
+            }
+            else
+            {
+                initialSymbols[mappable.Position] = mappable.Symbol;
+            }
+        }
 
+        TurnLogs.Add(new SimulationTurnLog
+        {
+            Mappable = "Start",
+            Move = "Initial positions",
+            Symbols = initialSymbols
+        });
+
+        // Przechodź przez kolejne ruchy
+        while (!_simulation.Finished)
+        {
+            var currentPosition = _simulation.CurrentMappable.Position;
+            var symbolsBeforeMove = new Dictionary<Point, char>();
+
+            TurnLogs.Add(new SimulationTurnLog
+            {
+                Mappable = $"{_simulation.CurrentMappable.ToString()}  ({currentPosition.X}, {currentPosition.Y})",
+                Move = _simulation.CurrentMoveName.ToString(),
+                Symbols = symbolsBeforeMove
+            });
+
+
+            _simulation.Turn();
+            // Najpierw zapisz log PRZED wykonaniem ruchu
+            
+            
             foreach (var mappable in _simulation.Mappables)
             {
-                
-                if (symbols.ContainsKey(mappable.Position))
+                if (symbolsBeforeMove.ContainsKey(mappable.Position))
                 {
-                    symbols[mappable.Position] = 'X';
+                    symbolsBeforeMove[mappable.Position] = 'X'; // Konflikt pozycji
                 }
                 else
                 {
-                    symbols[mappable.Position] = mappable.Symbol;
+                    symbolsBeforeMove[mappable.Position] = mappable.Symbol;
                 }
             }
   
-            TurnLogs.Add(new SimulationTurnLog
-            {
-                Mappable = _simulation.CurrentMappable.ToString(),
-                Move = _simulation.CurrentMoveName.ToString(),
-                Symbols = symbols
-            });
-
-            // Wykonujemy kolejny ruch w symulacji
-            _simulation.Turn();
         }
     }
+
 }

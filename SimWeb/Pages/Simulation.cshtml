@@ -1,0 +1,74 @@
+﻿@page "{turn?}"
+@model SimWeb.Pages.SimulationModel
+@{
+    ViewData["Title"] = "Symulacja";
+    var history = Model.History;
+    var currentTurn = Model.CurrentTurn;
+    var log = history.TurnLogs[currentTurn];
+}
+
+
+    <p>
+    <center>
+        <strong>@log.Mappable</strong>
+        @($" => {log.Move}")
+	</center>
+    </p>
+
+
+<!-- Tabela HTML odwzorowująca mapę -->
+<table style="border-collapse: collapse; background-color: #98fb98;">
+    @for (int y = history.SizeY - 1; y >= 0; y--)
+    {
+        <tr>
+            @for (int x = 0; x < history.SizeX; x++)
+            {
+
+                <td style="width: 50px; height: 50px; border: 1px solid black; text-align: center;">
+                    @{
+                        char symbol;
+                        if (log.Symbols.TryGetValue(new Simulator.Point(x, y), out symbol))
+                        {
+                            var imagePath = symbol switch
+                            {
+                                'O' => "/images/orc.png",
+                                'E' => "/images/elf.png",
+                                'A' => "/images/animal.png",
+                                'B' => "/images/bird-flying.png",
+                                'b' => "/images/bird-not-flying.png",
+                                
+                                _ => null // Puste pole lub brak obrazka dla symbolu
+                            };
+
+                        // Jeśli jest obrazek, wyświetl go
+                        if (imagePath != null)
+                        {
+                            <img src="@imagePath" alt="@symbol" class="map-image" />
+                        }
+                        else
+                        {
+                            @symbol
+                            // Wyświetl symbol, jeśli nie ma obrazka
+                        }
+                        }
+                        else
+                        {
+                            @: &nbsp;
+                        }
+                    }
+                </td>
+            }
+        </tr>
+    }
+</table>
+
+<!-- Nawigacja między turami -->
+<div>
+    <center>
+        <a asp-page="/Simulation" asp-route-turn="@(currentTurn - 1)" class="btn btn-primary">← Previous</a>
+        <span>Turn @currentTurn</span>
+        <a asp-page="/Simulation" asp-route-turn="@(currentTurn + 1)" class="btn btn-primary">Next →</a>
+    </center>
+</div>
+
+
