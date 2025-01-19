@@ -1,5 +1,6 @@
 ﻿@page "{turn?}"
 @model SimWeb.Pages.SimulationModel
+
 @{
     ViewData["Title"] = "Symulacja";
     var history = Model.History;
@@ -15,6 +16,11 @@
 	</center>
     </p>
 
+    
+@if (Model.CurrentTurn == Model.History.TurnLogs.Count - 1)
+{
+    <h2><center>@Model.History.ResultMessage</center></h2>
+}
 
 <!-- Tabela HTML odwzorowująca mapę -->
 <table style="border-collapse: collapse; background-color: #98fb98;">
@@ -36,6 +42,7 @@
                                 'A' => "/images/animal.png",
                                 'B' => "/images/bird-flying.png",
                                 'b' => "/images/bird-not-flying.png",
+                                '$' => "/images/treasure.png",
                                 
                                 _ => null // Puste pole lub brak obrazka dla symbolu
                             };
@@ -69,6 +76,7 @@
         <span>Turn @currentTurn</span>
         <a asp-page="/Simulation" asp-route-turn="@(currentTurn + 1)" class="btn btn-primary">Next →</a>
     </center>
+
 </div>
 
 

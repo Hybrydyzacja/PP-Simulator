@@ -34,6 +34,7 @@ public class Simulation
     /// </summary>
     public bool Finished = false;
 
+
     /// <summary>
     /// Creature which will be moving current turn.
     /// </summary>
@@ -56,6 +57,8 @@ public class Simulation
     /// if number of creatures differs from 
     /// number of starting positions.
     /// </summary>
+    public readonly Point TreasureLocation;
+    public bool TreasureFound { get; private set; } = false;
     public Simulation(Map map, List<IMappable> mappables,
         List<Point> positions, string moves)
     {
@@ -74,10 +77,34 @@ public class Simulation
         Positions = positions;
         Moves = moves ?? throw new ArgumentNullException(nameof(moves));
 
+        TreasureLocation = GenerateTreasureLocation();
+        Console.WriteLine($"TreasureLocation set to: {TreasureLocation}");
+
         for (int i = 0; i < Mappables.Count; i++)
         {
             mappables[i].InitMapAndPosition(map, positions[i]);
         }
+
+    }
+    private Point GenerateTreasureLocation()
+    {
+        Random random = new();
+        int x, y;
+        do
+        {
+            x = random.Next(0, Map.SizeX);
+            y = random.Next(0, Map.SizeY);
+        } while (Positions.Any(p => p.X == x && p.Y == y));
+
+        return new Point(x, y);
+        Console.WriteLine($"Adding treasure to map at {TreasureLocation}");
+
+    }
+
+
+    public void SetTreasureFound()
+    {
+        TreasureFound = true;
     }
 
     /// <summary>
@@ -106,6 +133,13 @@ public class Simulation
 
 
         CurrentMappable.Go(direction);
+        if (Mappables.Any(m => m.Position == TreasureLocation))
+        {
+            TreasureFound = true;
+            Console.WriteLine($"Treasure found by: {CurrentMappable}");
+        }
+
+
         index++;
 
         if (index >= Moves.Length)

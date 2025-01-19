@@ -10,11 +10,16 @@ public class SimulationModel : PageModel
     public SimulationHistory History { get; private set; }
     public int CurrentTurn { get; private set; }
 
+
+    private static SimulationHistory? CachedHistory;
+
     public void OnGet(int? turn)
     {
-        // Inicjalizacja symulacji
-        var map = new SmallTorusMap(8, 6);
-        var mappables = new List<IMappable>
+        if (CachedHistory == null)
+        {
+            // Inicjalizacja symulacji
+            var map = new SmallTorusMap(8, 6);
+            var mappables = new List<IMappable>
         {
             new Elf("Elandor"),
             new Orc("Gorbag"),
@@ -22,16 +27,19 @@ public class SimulationModel : PageModel
             new Birds { Description = "Eagles" },
             new Birds { Description = "Ostriches", CanFly = false }
         };
-        var positions = new List<Point>
+            var positions = new List<Point>
         {
             new(2, 2), new(3, 1), new(2, 1), new(1, 4), new(5, 5)
         };
-        var moves = "dlrludl";
+            var moves = "dlrludluudlddulrlrrudduurrll";
 
-        var simulation = new Simulation(map, mappables, positions, moves);
-        History = new SimulationHistory(simulation);
+            var simulation = new Simulation(map, mappables, positions, moves);
+
+            CachedHistory = new SimulationHistory(simulation);
+        }
 
         // Obs³uga obecnej tury
+        History = CachedHistory;
         CurrentTurn = turn ?? 0;
         if (CurrentTurn < 0) CurrentTurn = 0;
         if (CurrentTurn >= History.TurnLogs.Count) CurrentTurn = History.TurnLogs.Count - 1;

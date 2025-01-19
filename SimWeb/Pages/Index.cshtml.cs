@@ -11,9 +11,10 @@ namespace SimWeb.Pages
         {
             _logger = logger;
         }
-
+        public string Moves { get; private set; }
         public void OnGet()
         {
+
 
         }
     }

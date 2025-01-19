@@ -31,4 +31,27 @@ public readonly struct Point
             _ => throw new Exception($"Not expected direction value: {direction}")
         };
     }
+    public override bool Equals(object? obj)
+    {
+        if (obj is Point other)
+        {
+            return X == other.X && Y == other.Y;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y);
+    }
+
+    public static bool operator ==(Point left, Point right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Point left, Point right)
+    {
+        return !(left == right);
+    }
 }
